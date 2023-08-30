@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "http://ns.c2pa.org/claim_review/v1",
+  "type": "object",
+  "description": "Assertion that describes a fact-checking review of claims made (or reported) in some creative work (referenced via itemReviewed).",
+  "examples": [
+    {
+      "@context": "http://schema.org",
+      "@type": "ClaimReview",
+      "claimReviewed": "The world is flat",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "1",
+        "bestRating": "5",
+        "worstRating": "1",
+        "ratingExplanation": "The world is not flat",
+        "alternateName": "False"
+      },
+      "itemReviewed": {
+        "@type": "CreativeWork",
+        "url": "self#jumbf=c2pa/urn:uuid:F9168C5E-CEB2-4faa-B6BF-329BF39FA1E4/c2pa.assertions/c2pa.ingredient__1"
+      }
+    }
+  ],
+  "anyOf": [
+    {
+      "$ref": "https://json.schemastore.org/schema-org-thing.json"
+    }
+  ],
+  "properties": {
+    "claimReviewed": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A short summary of the specific claims reviewed in a ClaimReview."
+    },
+    "reviewAspect": {
+      "type": "string",
+      "minLength": 1,
+      "description": "From http://schema.org/Review: This Review or Rating is relevant to this part or facet of the itemReviewed."
+    },
+    "reviewBody": {
+      "type": "string",
+      "minLength": 1,
+      "description": "From http://schema.org/Review: The actual body of the review."
+    },
+    "reviewRating": {
+      "description": "From http://schema.org/Review: The rating given in this review. Note that reviews can themselves be rated. The reviewRating applies to rating given by the review. The aggregateRating property applies to the review itself, as a creative work.",
+      "anyOf": [
+        {
+          "$ref": "https://json.schemastore.org/jsonld#"
+        }
+      ]
+    },
+    "itemReviewed": {
+      "description": "From http://schema.org/Review: The item that is being reviewed/rated.",
+      "anyOf": [
+        {
+          "$ref": "https://json.schemastore.org/jsonld#"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "http://ns.c2pa.org/hashed-uri/v1",
+  "type": "object",
+  "description": "The data structure used to store a reference to a local URL and its hash",
+  "$defs": {
+    "JUMBF_URI": {
+      "$id": "#JUMBF_URI",
+      "description": "JUMBF URI reference",
+      "type": "string",
+	  "pattern": "^self#jumbf=[\\w\\d][\\w\\d\\./:-]+[\\w\\d]$"
+    }
+  },
+  "examples": [
+    {
+      "url": "self#jumbf=c2pa/urn:uuid:F9168C5E-CEB2-4faa-B6BF-329BF39FA1E4/c2pa.assertions/c2pa.actions",
+      "alg": "sha256",
+      "hash": "hoOspQQ1lFTy/4Tp8Epx670E5QW5NwkNR+2b30KFXug="
+    }
+  ],
+  "required": ["url", "hash"],
+  "properties": {
+    "url": {
+      "$ref": "#/$defs/JUMBF_URI",
+      "description": "JUMBF URI reference"
+    },
+    "alg": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A string identifying the cryptographic hash algorithm used to compute all hashes in this claim, taken from the C2PA hash algorithm identifier list. If this field is absent, the hash algorithm is taken from an enclosing structure as defined by that structure. If both are present, the field in this structure is used. If no value is present in any of these places, this structure is invalid; there is no default."
+    },
+    "hash": {
+      "type": "string",
+      "minLength": 1,
+      "description": "CBOR byte string containing the hash value"
+    }
+  },
+  "additionalProperties": false
+}

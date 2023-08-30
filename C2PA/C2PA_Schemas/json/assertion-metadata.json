@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "http://ns.c2pa.org/assertion-metadata/v1",
+  "type": "object",
+  "description": "Assertion that describes additional information about an assertion, including a hashed-uri reference to it",
+  "examples": [
+    {
+      "dataSource": {
+        "type": "localProvider.REE",
+        "details": "Dilip's Photo Editor for Windows v5.6"
+      },
+      "reviewRatings": [
+        {
+          "value": 2,
+          "code" : "actions.unknownActionsPerformed",
+          "explanation": "A 3rd party filter was used."
+        }
+      ],
+      "dateTime": "2021-06-28T16:34:11.457Z"
+    },
+    {
+      "reference": {
+        "url": "self#jumbf=c2pa/urn:uuid:F9168C5E-CEB2-4faa-B6BF-329BF39FA1E4/c2pa.assertions/stds.schema-org.CreativeWork",
+        "alg": "sha256",
+        "hash": "hoOspQQ1lFTy/4Tp8Epx670E5QW5NwkNR+2b30KFXug="
+      },
+      "reviewRatings": [
+        {
+          "value": 1,
+          "code": "stds.schema-org.CreativeWork.missingAttribution",
+          "explanation": "Producer Thomas Chu was not credited."
+        },
+        {
+          "value": 1,
+          "code": "stds.schema-org.CreativeWork.misattributed",
+          "explanation": "Editor of asset is Aswhini Viswanathan, not Stacey Higgs."
+        }
+      ],
+      "localizations": [
+        {
+          "copyrightHolder.legalName": {
+            "en-US": "Example Corporation",
+            "en-GB": "Example Corporation",
+            "es": "Ejemplo de una empresa",
+            "fr": "Exemple d'entreprise",
+            "jp": "例の会社"
+          }
+        }
+      ]
+    }
+  ],
+  "$defs": {
+    "ACTOR": {
+      "type": "object",
+      "properties": {
+        "credentials": {
+          "type": "array",
+          "description": "An array of hashed uris to W3C Verifiable Credentials",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "http://ns.c2pa.org/hashed-uri/v1"
+              },
+              {
+                "$ref": "http://ns.c2pa.org/hashed-ext-uri/v1"
+              }
+            ],
+            "description": "hashed-uri reference to a W3C Verifiable Credential (VC) associated with the person or organization who entered the assertion content."
+          }
+        }
+      },
+      "identifier": {
+        "type": "string",
+        "description": "An identifier for a human actor, used when the 'type' is humanEntry.identified",
+        "minLength": 1
+      },
+      "required": ["credentials"],
+      "additionalProperties": false
+    },
+    "DATASOURCE": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "signer",
+            "claimGenerator.REE",
+            "claimGenerator.TEE",
+            "localProvider.REE",
+            "localProvider.TEE",
+            "remoteProvider.1stParty",
+            "remoteProvider.3rdParty",
+            "humanEntry.anonymous",
+            "humanEntry.identified`"
+          ],
+          "description": "A value from among the enumerated list indicating whether the source of the assertion is a claim generator running in a rich execution environment (REE), a claim generator running in a trusted execution environment (TEE), a local data provider in REE (e.g. the location API from a mobile operating system), a local data running in a TEE (e.g. a trusted location trusted app from a chipset vendor), a remote data provider such as a server (e.g. Google's geolocation API service), entry by a human who wishes to remain anonymous, or a human who is credentialed with a W3C Verifiable Credential that's included in the asset."
+        },
+        "details": {
+          "type": "string",
+          "description": "A human readable string giving details about the source of the assertion data, e.g. the URL of the remote server that provided the data"
+        },
+        "actors": {
+          "type": "array",
+          "description": "An array of the actors that undertook this action.",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "$ref": "#/$defs/ACTOR",
+            "description": "list of actors"
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "not": {
+            "properties": {
+              "type": {
+                "const": "humanEntry.credentialed"
+              }
+            },
+            "required": ["type"]
+          }
+        },
+        {
+          "required": ["actors"]
+        }
+      ],
+      "required": ["type"],
+      "additionalProperties": false
+    },
+    "RATING": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "A value from 1 (worst) to 5 (best) of the rating of the item"
+        },
+        "code": {
+          "enum": [
+            "actions.unknownActionsPerformed",
+            "actions.missing",
+            "actions.possiblyMissing",
+            "depthMap.sceneMismatch",
+            "ingredient.modified",
+            "ingredient.possiblyModified",
+            "thumbnail.primaryMismatch",
+            "stds.iptc.location.inaccurate",
+            "stds.schema-org.CreativeWork.misattributed",
+            "stds.schema-org.CreativeWork.missingAttribution"
+          ],
+          "description": "A label-formatted string that describes the reason for the rating"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A human readable string explaining why the rating is what it is"
+        }
+      },
+      "required": ["value"]
+    },
+    "LOCALIZATION_ENTRY": {
+      "type": "object",
+      "properties": {
+        "^..[-A-Za-z]*$": {
+          "type": "string",
+          "description": "String for the value as describe by the BCP-47 code as the key",
+          "minLength": 1
+          }
+      },
+      "required": [],
+      "additionalProperties": true
+    }
+  },
+  "properties": {
+    "dataSource": {
+      "$ref": "#/$defs/DATASOURCE",
+      "description": "A description of the source of the assertion data, selected from a predefined list"
+    },
+    "reviewRatings": {
+      "type": "array",
+      "description": "An array of review ratings",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/RATING",
+        "description": "The rating given to the assertion"
+      }
+    },
+    "dateTime": {
+      "type": "string",
+      "minLength": 1,
+      "format": "date-time",
+      "description": "The ISO 8601 date-time string when the assertion was created/generated"
+    },
+    "reference": {
+      "$ref": "http://ns.c2pa.org/hashed-uri/v1",
+      "description": "hashed_uri reference to another assertion that this review is about"
+    },
+    "localizations" : {
+      "type": "array",
+      "description": "An array of localizations",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/LOCALIZATION_ENTRY",
+        "description": "The localization entries for a single string"
+      }
+    }
+  },
+  "required": [],
+  "additionalProperties": true
+}

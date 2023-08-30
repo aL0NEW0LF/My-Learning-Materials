@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "http://ns.c2pa.org/creative_work/v1",
+  "type": "object",
+  "description": "Assertion that describes the most generic kind of creative work, including books, movies, photographs, software programs, etc.",
+  "examples": [
+    {
+      "@context": [
+        "http://schema.org/",
+        {
+          "credential": null
+        }
+      ],
+      "@type": "CreativeWork",
+      "datePublished": "2021-05-20T23:02:36+00:00",
+      "publisher": {
+        "name": "Example Corp. News",
+        "publishingPrinciples": "https://www.example.com/news/publishing-principles",
+        "logo": "https://www.example.com/news/images/example_news_logo.png",
+        "parentOrganization": {
+          "name": "Example Corp",
+          "legalName": "The Example Corporation"
+        }
+      },
+      "url": "https://www.example.com/news/stories/22107423-f7ba-4c4f-a015-d952ae7e3e59",
+      "identifier": "22107423-f7ba-4c4f-a015-d952ae7e3e59",
+      "producer": {
+        "identifier": "https://en.wikipedia.org/wiki/Joe_Bloggs",
+        "name": "Joe Bloggs",
+        "credential": [
+          {
+            "url": "self#jumbf=c2pa/urn:uuid:F9168C5E-CEB2-4faa-B6BF-329BF39FA1E4/c2pa.credentials/Joe_Bloggs",
+            "alg": "sha256",
+            "hash": "Auxjtmax46cC2N3Y9aFmBO9Jfay8LEwJWzBUtZ0sUM8gA"
+          }
+        ]
+      },
+      "copyrightHolder": {
+        "name": "Example Corp. News",
+        "legalName": "Example Corporation News"
+      },
+      "copyrightYear": 2023,
+      "copyrightNotice": "Copyright © 2023 Example Corp. News"
+    }
+  ],
+  "anyOf": [
+    {
+      "$ref": "https://json.schemastore.org/schema-org-thing.json"
+    }
+  ],
+  "properties": {
+    "datePublished": {
+      "type": "string",
+      "minLength": 1,
+      "format": "date-time",
+      "description": "From http://schema.org/CreativeWork: Date of first broadcast/publication."
+    },
+    "publisher": {
+      "description": "From http://schema.org/CreativeWork: The publisher of the creative work.",
+      "$ref": "#/$defs/personOrgOrUri"
+    },
+    "identifier": {
+      "$ref": "#/$defs/credential"
+    },
+    "producer": {
+      "description": "From http://schema.org/CreativeWork: The person or organization who produced the work (e.g. music album, movie, tv/radio series etc.).",
+      "$ref": "#/$defs/personOrgOrUri"
+    },
+    "creator": {
+      "description": "From http://schema.org/CreativeWork: The creator/author of this CreativeWork.",
+      "$ref": "#/$defs/personOrgOrUri"
+    },
+    "editor": {
+      "description": "From http://schema.org/CreativeWork: Specifies the Person who edited the CreativeWork.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/person"
+        },
+        {
+          "$ref": "#/$defs/uri"
+        }
+      ]
+    },
+    "contributor": {
+      "description": "From http://schema.org/CreativeWork: A secondary contributor to the CreativeWork or Event.",
+      "$ref": "#/$defs/personOrgOrUri"
+    },
+    "copyrightHolder": {
+      "description": "From http://schema.org/CreativeWork: The party holding the legal copyright to the CreativeWork.",
+      "$ref": "#/$defs/personOrgOrUri"
+    },
+    "copyrightNotice": {
+      "type": "string",
+      "minLength": 1,
+      "description": "From http://schema.org/CreativeWork: Text of a notice appropriate for describing the copyright aspects of this Creative Work, ideally indicating the owner of the copyright for the Work."
+    },
+    "copyrightYear": {
+      "type": "integer",
+      "description": "From http://schema.org/CreativeWork: The year during which the claimed copyright for the CreativeWork was first asserted."
+    }
+  },
+  "$defs": {
+    "credential": {
+      "type": "array",
+      "description": "W3C Verifiable Credentials (VC) associated with this actor.",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "http://ns.c2pa.org/hashed-uri/v1"
+          },
+          {
+            "$ref": "http://ns.c2pa.org/hashed-ext-uri/v1"
+          }
+        ]
+      }
+    },
+    "organization": {
+      "type": "object",
+      "description": "From http://schema.org/Organization: An organization such as a school, NGO, corporation, club, etc.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The name of the Organization."
+        },
+        "legalName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "From http://schema.org/Organization: The official name of the organization, e.g. the registered company name."
+        },
+        "publishingPrinciples": {
+          "type": "string",
+          "minLength": 1,
+          "format": "uri",
+          "description": "From http://schema.org/Organization: The publishingPrinciples property indicates (typically via URL) a document describing the editorial principles of an Organization (or individual e.g. a Person writing a blog) that relate to their activities as a publisher, e.g. ethics or diversity policies."
+        },
+        "logo": {
+          "type": "string",
+          "minLength": 1,
+          "format": "uri",
+          "description": "From http://schema.org/Organization: An associated logo."
+        },
+        "parentOrganization": {
+          "description": "From http://schema.org/Organization: The larger organization that this organization is a subOrganization of, if any.",
+          "$ref": "#/$defs/organization"
+        },
+        "identifier": {
+          "$ref": "#/$defs/credential"
+        },
+        "credential": {
+          "$ref": "#/$defs/credential"
+        }
+      }
+    },
+    "person": {
+      "type": "object",
+      "description": "From http://schema.org/Organization: An organization such as a school, NGO, corporation, club, etc.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The name of the Person."
+        },
+        "givenName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "From http://schema.org/Person: Given name. In the U.S., the first name of a Person."
+        },
+        "familyName": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Family name. In the U.S., the last name of a Person."
+        },
+        "identifier": {
+          "$ref": "#/$defs/credential"
+        },
+        "credential": {
+          "$ref": "#/$defs/credential"
+        }
+      }
+    },
+    "uri": {
+      "type": "string",
+      "minLength": 1,
+      "format": "uri"
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The identifier property represents any kind of identifier for any kind of Thing (in this case, an identifier for this CreativeWork)."
+    },
+    "personOrgOrUri": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/organization"
+        },
+        {
+          "$ref": "#/$defs/person"
+        },
+        {
+          "$ref": "#/$defs/uri"
+        }
+      ]
+    },
+    "metadata": {
+      "$ref": "http://ns.c2pa.org/assertion-metadata/v1",
+      "description": "additional information about the assertion"
+    }
+  }
+}

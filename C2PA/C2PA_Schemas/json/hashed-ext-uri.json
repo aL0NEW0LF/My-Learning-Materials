@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "http://ns.c2pa.org/hashed-ext-uri/v1",
+  "type": "object",
+  "description": "The data structure used to store a reference to an external URL and its hash",
+  "$defs": {
+    "EXT_URI": {
+      "$id": "#EXT_URI",
+      "description": "External URI reference",
+      "type": "string",
+      "pattern": "^https?:\/\/[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b[-a-zA-Z0-9@:%_\\+.~#?&//=]*$"
+    }
+  },
+  "examples": [
+    {
+      "url": "https://some.storage.us/foo",
+      "alg": "sha256",
+      "hash": "hoOspQQ1lFTy/4Tp8Epx670E5QW5NwkNR+2b30KFXug="
+    }
+  ],
+  "required": ["url", "alg", "hash"],
+  "properties": {
+    "url": {
+      "$ref": "#/$defs/EXT_URI",
+      "description": "JUMBF URI reference"
+    },
+    "alg": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A string identifying the cryptographic hash algorithm used to compute all hashes in this claim, taken from the C2PA hash algorithm identifier list. Unlike alg fields in other types, this field is mandatory here."
+    },
+    "hash": {
+      "type": "string",
+      "minLength": 1,
+      "description": "CBOR byte string containing the hash value"
+    }
+  },
+  "additionalProperties": false
+}
